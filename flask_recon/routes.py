@@ -4,7 +4,6 @@ from typing import List, Dict, Callable, Tuple
 from flask import request, render_template, Response, redirect
 
 from flask_recon import Listener, RemoteHost, IncomingRequest
-from flask_recon.database import db_error_handler
 
 BASE_DIRECTORY = "flask-recon"
 
@@ -51,14 +50,15 @@ class WebApp:
         self._listener = listener
 
     def view_endpoints(self):
-        return render_template("view_endpoints.html", endpoints=self._listener.database_handler.get_all_endpoints())
+        return render_template("flask-recon/view_endpoints.html",
+                               endpoints=self._listener.database_handler.get_all_endpoints())
 
     def view_hosts(self):
-        return render_template("view_hosts.html", hosts=self._listener.database_handler.get_remote_hosts())
+        return render_template("flask-recon/view_hosts.html", hosts=self._listener.database_handler.get_remote_hosts())
 
     def html_hosts_by_endpoint(self):
         endpoint = request.args.get("endpoint")
-        return render_template("hosts_by_endpoint.html",
+        return render_template("flask-recon/hosts_by_endpoint.html",
                                hosts=self._listener.database_handler.get_hosts_by_endpoint(endpoint),
                                endpoint=endpoint)
 
@@ -66,7 +66,7 @@ class WebApp:
         endpoint = request.args.get("endpoint")
         requests = self._listener.database_handler.get_requests(endpoint=endpoint)
         self.update_tls(requests)
-        return render_template("view_requests.html", requests=requests, endpoint=endpoint,
+        return render_template("flask-recon/view_requests.html", requests=requests, endpoint=endpoint,
                                title=f"Requests to {endpoint}")
 
     def html_requests_by_host(self):
@@ -83,7 +83,7 @@ class WebApp:
             requests = self._listener.database_handler.get_requests(host=remote_host)
 
         self.update_tls(requests)
-        return render_template("view_requests.html", requests=requests, title=f"Requests from {host}")
+        return render_template("flask-recon/view_requests.html", requests=requests, title=f"Requests from {host}")
 
     def html_search(self):
         if any([
@@ -99,8 +99,8 @@ class WebApp:
             results = self._listener.database_handler.search(method=method, all_must_match=all_must_match,
                                                              uri=uri, host=host, query_string=query_string, body=body,
                                                              case_sensitive=case_sensitive, headers=headers)
-            return render_template("search.html", requests=results)
-        return render_template("search.html")
+            return render_template("flask-recon/search.html", requests=results)
+        return render_template("flask-recon/search.html")
 
     def csv_request_dump(self):
         request_id = request.args.get("request_id")
@@ -124,7 +124,7 @@ class WebApp:
         last_request_time = self._listener.database_handler.get_last_request_time()
         time_since_last_request = datetime.now() - last_request_time
         return render_template(
-            "home.html",
+            "flask-recon/home.html",
             total_requests=self._listener.database_handler.get_request_count(),
             total_endpoints=self._listener.database_handler.get_endpoint_count(),
             total_actors=self._listener.database_handler.get_actor_count(),
@@ -138,7 +138,7 @@ class WebApp:
 
     def register(self):
         if request.method == "GET":
-            return render_template("register_form.html")
+            return render_template("flask-recon/register_form.html")
 
         username = request.form.get("username")
         password = request.form.get("password")
@@ -160,7 +160,7 @@ class WebApp:
 
     def login(self):
         if request.method == "GET":
-            return render_template("login_form.html")
+            return render_template("flask-recon/login_form.html")
 
         username = request.form.get("username")
         password = request.form.get("password")
