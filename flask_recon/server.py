@@ -85,6 +85,9 @@ class Listener:
 
         return "404 Not Found", 404
 
+    def __call__(self, *args, **kwargs):
+        return self._flask.__call__(*args, **kwargs)
+
     @staticmethod
     def process_connect_target(target: str) -> Optional[str]:
         if target.startswith("/"):
