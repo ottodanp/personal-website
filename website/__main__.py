@@ -21,6 +21,11 @@ def also_see():
     return render_template('check-out.html')
 
 
+@app.route('/about-me')
+def about_me():
+    return render_template('about.html')
+
+
 @app.route('/sitemap.xml')
 def sitemap():
     return open("sitemap.xml", "rb").read()
