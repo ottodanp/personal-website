@@ -16,6 +16,16 @@ def projects():
     return render_template('projects.html')
 
 
+@app.route('/also-see')
+def also_see():
+    return render_template('check-out.html')
+
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return open("sitemap.xml", "rb").read()
+
+
 if __name__ == '__main__':
     listener = Listener(app, halt_scanner_threads=False)
     add_routes(listener, run_api=False, run_webapp=True)
