@@ -1,1 +1,1 @@
-from database import DatabaseHandler
+from .database import DatabaseHandler

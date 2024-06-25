@@ -1,9 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from gevent.pywsgi import WSGIServer
 
 from flask_recon import Listener, add_routes
+import ip_address_checker
 
 app = Flask(__name__)
+ip_address_db_handler = ip_address_checker.DatabaseHandler("new_flask_recon", "postgres", "postgres", "localhost", "5432")
 
 
 @app.route('/')
@@ -24,6 +26,17 @@ def also_see():
 @app.route('/about-me')
 def about_me():
     return render_template('about.html')
+
+
+@app.route('/ip-lookup', methods=["GET", "POST"])
+def ip_lookup():
+    if request.method == "GET":
+        return render_template('ip-address-search.html')
+
+    elif request.method == "POST":
+        ip_address = request.form["ip_address"]
+        host_id, host, request_count = ip_address_db_handler.get_ip_details(ip_address)
+        return render_template('ip-address-search-result.html', host_id=host_id, host=host, request_count=request_count)
 
 
 @app.route('/sitemap.xml')

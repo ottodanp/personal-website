@@ -2,6 +2,9 @@ from database_util import BaseHandler, commit_on_success
 
 
 class DatabaseHandler(BaseHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     @commit_on_success
     def insert_endpoint(self, url: str) -> None:
         self.execute("INSERT INTO endpoints (url) VALUES (%s)", (url,))

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'flask-recon/head.html' %}
+    <title>IP Address Threat Search</title>
+</head>
+<body>
+{% include 'flask-recon/navbar.html' %}
+
+<div class="container">
+    <h1 class="align-center">IP Address Threat Search</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/ip-lookup" method="post" class="form-inline">
+                <div class="input-group input-group-lg mb-3">
+                    <span class="input-group-text" id="inputGroup-sizing-lg">IP Address</span>
+                    <input type="text" class="form-control" name="ip_address" aria-label="IP Address Input"
+                           placeholder="1.1.1.1"
+                           aria-describedby="inputGroup-sizing-lg">
+                    <button type="submit" class="btn btn-primary btn-lg ml-2">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+</body>
+</html>
