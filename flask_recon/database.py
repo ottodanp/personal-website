@@ -4,30 +4,18 @@ from json import dumps, loads
 from typing import Optional, List, Tuple, Dict, Union, Any
 from uuid import uuid4
 
-from psycopg2 import connect
-from psycopg2.extensions import cursor, connection
-
+from database_util import BaseHandler, commit_on_success
 from flask_recon.structures import IncomingRequest, RemoteHost, RequestMethod
 
 
-class DatabaseHandler(cursor):
-    _conn: connection
-
-    def __init__(self, dbname: str, user: str, password: str, host: str, port: str):
-        self._conn = connect(database=dbname, user=user, password=password, host=host, port=port)
-        super().__init__(self._conn)
-
-    def __del__(self):
-        self._conn.close()
-        super().close()
-
+class DatabaseHandler(BaseHandler):
     def actor_exists(self, remote_host: RemoteHost) -> bool:
         self.execute("SELECT EXISTS(SELECT actor_id FROM actors WHERE host = %s)", (remote_host.address,))
         return self.fetchone()[0]
 
+    @commit_on_success
     def insert_actor(self, remote_host: RemoteHost, flagged: bool = False) -> None:
         self.execute("INSERT INTO actors (host, flagged) VALUES (%s, %s)", (remote_host.address, flagged,))
-        self._conn.commit()
 
     def get_actor_average_threat_level(self, actor_id: int) -> int:
         self.execute("SELECT threat_level FROM requests WHERE actor_id = %s", (actor_id,))
@@ -48,15 +36,16 @@ class DatabaseHandler(cursor):
         self.execute("SELECT address FROM authorized_addresses WHERE host = %s", (remote_host.address,))
         return True if self.fetchone() else False
 
+    @commit_on_success
     def update_request_threat_level(self, request_id: int, threat_level: int) -> None:
         self.execute("UPDATE requests SET threat_level = %s WHERE request_id = %s", (threat_level, request_id))
-        self._conn.commit()
 
+    @commit_on_success
     def update_actor_threat_level(self, actor_id: int) -> None:
         threat_level = self.get_actor_average_threat_level(actor_id)
         self.execute("UPDATE actors SET threat_level = %s WHERE actor_id = %s", (threat_level, actor_id))
-        self._conn.commit()
 
+    @commit_on_success
     def insert_request(self, request: IncomingRequest) -> None:
         if not self.actor_exists(request.host):
             self.insert_actor(request.host)
@@ -72,7 +61,6 @@ class DatabaseHandler(cursor):
             (actor_id, timestamp, request.method.value, request.uri, dumps(request.body),
              dumps(request.headers), request.query_string, request.local_port, request.is_acceptable,
              request.threat_level))
-        self._conn.commit()
 
     def get_request(self, request_id: int) -> IncomingRequest:
         self.execute("SELECT * FROM requests WHERE request_id = %s", (request_id,))
@@ -112,12 +100,12 @@ class DatabaseHandler(cursor):
         self.execute("SELECT EXISTS(SELECT honeypot_id FROM honeypots WHERE file_name = %s)", (file,))
         return self.fetchone()[0]
 
+    @commit_on_success
     def insert_honeypot(self, file: str, contents: str) -> None:
         if self.honeypot_exists(file):
             return
 
         self.execute("INSERT INTO honeypots (file_name, dummy_contents) VALUES (%s, %s)", (file, contents))
-        self._conn.commit()
 
     def count_endpoint(self, endpoint: str) -> int:
         self.execute("SELECT COUNT(*) FROM requests WHERE path = %s", (endpoint,))
@@ -215,12 +203,12 @@ class DatabaseHandler(cursor):
         self.execute("SELECT EXISTS(SELECT connect_target_id FROM connect_targets WHERE url = %s)", (url,))
         return self.fetchone()[0]
 
+    @commit_on_success
     def insert_connect_target(self, url: str, body: str) -> None:
         if self.connect_target_exists(url):
             return
 
         self.execute("INSERT INTO connect_targets (url, body) VALUES (%s, %s)", (url, body))
-        self._conn.commit()
 
     def get_connect_target(self, url: str) -> str:
         self.execute("SELECT body FROM connect_targets WHERE url = %s", (url,))
@@ -342,36 +330,36 @@ class DatabaseHandler(cursor):
         """)
         return self.fetchone()[0]
 
+    @commit_on_success
     def generate_admin_key(self) -> str:
         key = str(uuid4())
         self.execute("INSERT INTO admin_keys (key) VALUES (%s)", (key,))
-        self._conn.commit()
         return key
 
+    @commit_on_success
     def generate_admin_session_token(self, admin_username: str) -> str:
         self.execute("SELECT admin_id FROM admins WHERE username = %s", (admin_username,))
         admin_id = self.fetchone()[0]
         token = str(uuid4())
         self.execute("INSERT INTO admin_sessions (token, admin_id) VALUES (%s, %s)", (token, admin_id))
-        self._conn.commit()
         return token
 
     def validate_session_token(self, token: str) -> bool:
         self.execute("SELECT EXISTS(SELECT token FROM admin_sessions WHERE token = %s)", (token,))
         return self.fetchone()[0]
 
+    @commit_on_success
     def validate_and_delete_registration_key(self, key: str) -> bool:
         self.execute("SELECT EXISTS(SELECT key FROM admin_keys WHERE key = %s)", (key,))
         if not self.fetchone()[0]:
             return False
         self.execute("DELETE FROM admin_keys WHERE key = %s", (key,))
-        self._conn.commit()
         return True
 
+    @commit_on_success
     def add_admin(self, username: str, password: str):
         self.execute("INSERT INTO admins (username, password) VALUES (%s, %s)",
                      (username, self.hash_password(password)))
-        self._conn.commit()
 
     def validate_admin_credentials(self, username: str, password: str) -> bool:
         self.execute("SELECT EXISTS(SELECT username FROM admins WHERE username = %s AND password = %s)",
@@ -385,17 +373,3 @@ class DatabaseHandler(cursor):
     @staticmethod
     def hash_password(password: str) -> str:
         return sha256(password.encode()).hexdigest()
-
-
-def db_error_handler(default_response: Tuple[str, int]):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except (TypeError, ) as e:
-                print(e)
-                return default_response
-
-        return wrapper
-
-    return decorator
