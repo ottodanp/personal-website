@@ -13,23 +13,18 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/projects')
-def projects():
-    return render_template('projects.html')
-
-
 @app.route('/projects/flask-recon')
-def projects():
+def flask_recon_summary():
     return render_template('project-summaries/flask-recon.html')
 
 
 @app.route('/projects/this-website')
-def projects():
+def this_website_summary():
     return render_template('project-summaries/this-website.html')
 
 
 @app.route('/projects/network-monitor')
-def projects():
+def network_monitor_summary():
     return render_template('project-summaries/network-monitor.html')
 
 
