@@ -10,6 +10,12 @@ ip_address_db_handler = ip_address_checker.DatabaseHandler("new_flask_recon", "p
 
 @app.route('/')
 def index():
+    args = request.args
+    if args.get("source"):
+        source = args.get("source")
+        with open("sources.txt", "a") as sources_file:
+            sources_file.write(f"{source}\n")
+
     return render_template('index.html')
 
 
