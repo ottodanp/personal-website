@@ -7,17 +7,39 @@
 <body>
 {% include 'navbar.html' %}
 
-<div class="container align-center">
-    <h1 class="align-center">Also See</h1>
-    <div class="card align-center" style="width: 18rem;">
-        <img src="https://chanchan.dev/static/images/tiled-background.png" class="card-img-top" alt="cc-background">
-        <div class="card-body">
-            <h5 class="card-title">Chander's Website</h5>
-            <p class="card-text">The personal website of my friend Chander, a prolific programmer and developer from Washington State, USA.</p>
-            <a href="https://chanchan.dev/" class="btn btn-primary">Visit his Website</a>
+<section class="container">
+    <h1>Also See</h1>
+    <p>Here are some other websites and projects that you might find interesting.</p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card" style="width: 100%;">
+                <img src="https://chanchan.dev/static/images/tiled-background.png" class="card-img-top" alt="cc-background">
+                <div class="card-body">
+                    <h5 class="card-title">Chander's Website</h5>
+                    <p class="card-text">The personal website of my friend Chander, a prolific programmer and developer from
+                        Washington State, USA.</p>
+                    <a href="https://chanchan.dev/" class="btn btn-primary">Visit His Website</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card" style="width: 100%;">
+                <img src="https://lh3.googleusercontent.com/tw9zOgSo656Yv787niLe2q-m2xeaMBJIuScC9wm3gE7G6BNeBbu-RqdYSGyLc5RGN9DhujNp1UMkeMJwI626esd8eyMaPbZlbITAlx7Fv9jFF9wmSvQIs9LY5Mli_-Kn4g=w1280" class="card-img-top" alt="vysion-background">
+                <div class="card-body">
+                    <h5 class="card-title">Vysion Software</h5>
+                    <p class="card-text">People with disabilities need more advanced and accessible technology that can leverage
+                        the capabilities of mobile devices, such as Computer Vision, LiDAR cameras, 3D audio, and haptic
+                        feedback, to provide comprehensive and personalized navigation assistance for people with disabilities.
+                        The Vysion App will utilize computer vision and AI to create a cloud-based web/mobile app to help the
+                        visually impaired become more independent in their day-to-day lives.</p>
+                    <a href="https://www.vysion.software/home" class="btn btn-primary">Visit Their Website</a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 {% include 'footer.html' %}
 </body>
 </html>
