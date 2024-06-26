@@ -67,3 +67,7 @@ CREATE TABLE IF NOT EXISTS "admin_keys"
     "key_id" SERIAL PRIMARY KEY,
     "key"    VARCHAR(255) NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS "actor_host_index" ON "actors" ("host");
+CREATE INDEX IF NOT EXISTS "request_actor_id_index" ON "requests" ("actor_id");
+CREATE INDEX IF NOT EXISTS "request_path_index" ON "requests" ("path");
