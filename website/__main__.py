@@ -18,6 +18,21 @@ def projects():
     return render_template('projects.html')
 
 
+@app.route('/projects/flask-recon')
+def projects():
+    return render_template('project-summaries/flask-recon.html')
+
+
+@app.route('/projects/this-website')
+def projects():
+    return render_template('project-summaries/this-website.html')
+
+
+@app.route('/projects/network-monitor')
+def projects():
+    return render_template('project-summaries/network-monitor.html')
+
+
 @app.route('/also-see')
 def also_see():
     return render_template('check-out.html')

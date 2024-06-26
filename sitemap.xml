@@ -57,6 +57,27 @@
     </url>
 
     <url>
+        <loc>https://www.ottodanp.dev/projects/this-website</loc>
+        <lastmod>2024-06-24</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>https://www.ottodanp.dev/projects/network-monitor</loc>
+        <lastmod>2024-06-24</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>https://www.ottodanp.dev/projects/flask-recon</loc>
+        <lastmod>2024-06-24</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
         <loc>https://www.ottodanp.dev/also-see</loc>
         <lastmod>2024-06-24</lastmod>
         <changefreq>daily</changefreq>
