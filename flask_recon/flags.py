@@ -125,4 +125,4 @@ class KnownFlags:
         return self._ua_flags
 
 
-KNOWN_FLAGS = KnownFlags("static/flags.json")
+KNOWN_FLAGS = KnownFlags("flags.json")
