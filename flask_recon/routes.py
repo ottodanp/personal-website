@@ -83,7 +83,7 @@ class WebApp:
             requests = self._listener.database_handler.get_requests(host=remote_host)
 
         self.update_tls(requests)
-        return render_template("flask-recon/view_requests.html", requests=requests, title=f"Requests from {host}")
+        return render_template("flask-recon/view_requests.html", requests=requests, host=host, title=f"Requests from {host}")
 
     def html_search(self):
         if any([
