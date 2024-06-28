@@ -3,6 +3,7 @@ from gevent.pywsgi import WSGIServer
 
 from flask_recon import Listener, add_routes
 import ip_address_checker
+from ip_address_checker.database import IpNotFound
 
 app = Flask(__name__)
 ip_address_db_handler = ip_address_checker.DatabaseHandler("new_flask_recon", "postgres", "postgres", "localhost", "5432")
@@ -51,7 +52,10 @@ def ip_lookup():
 
     elif request.method == "POST":
         ip_address = request.form["ip_address"]
-        host_id, host, request_count = ip_address_db_handler.get_ip_details(ip_address)
+        try:
+            host_id, host, request_count = ip_address_db_handler.get_ip_details(ip_address)
+        except IpNotFound:
+            return render_template('ip-address-search-result.html', host_id=None, host=None, request_count=None)
         return render_template('ip-address-search-result.html', host_id=host_id, host=host, request_count=request_count)
 
 
