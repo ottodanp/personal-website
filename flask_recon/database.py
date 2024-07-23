@@ -62,9 +62,12 @@ class DatabaseHandler(BaseHandler):
              dumps(request.headers), request.query_string, request.local_port, request.is_acceptable,
              request.threat_level))
 
-    def get_request(self, request_id: int) -> IncomingRequest:
+    def get_request(self, request_id: int) -> Optional[IncomingRequest]:
         self.execute("SELECT * FROM requests WHERE request_id = %s", (request_id,))
         row = self.fetchone()
+        if row is None:
+            return
+
         self.execute("SELECT host FROM actors WHERE actor_id = %s", (row[1],))
         result = self.fetchone()
         if not result:

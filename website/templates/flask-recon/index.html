@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Flask Recon Home</title>
+    <meta name="description" content="Flask Recon Home">
+    <meta name="keywords" content="Flask, recon, monitor, website, attacks, scans, unauthorized">
+    <meta http-equiv="onion-location" content="http://ye66etteccobxnuq4uzf5r6255xeiin6wlle4s2smx7usywtgmuq4cyd.onion/flask-recon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% include 'head.html' %}
+</head>
+<body>
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1 class="align-center">Flask Recon</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Welcome to Flask Recon! This is a project that I have been working on to monitor my website for unauthorized
+                scans, attacks, and other malicious activity. I have been logging requests to my website and analyzing
+                them to determine if they are legitimate or not. I have also been monitoring IP addresses that have been
+                flagged as suspicious to see if they are associated with known malicious activity.</p>
+            <p>Feel free to use the tools on this website to search for IP addresses, view request logs, and more. If you
+                have any questions or feedback, please don't hesitate to <a href="/contact">contact me</a>.</p>
+        </div>
+    </div>
+</div>
+
+<canvas id="myChart" width="400" height="200"></canvas>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['26/6/2024', '27/6/2024', '28/6/2024', '29/6/2024', '30/6/2024', '01/07/2024'],
+            datasets: [{
+                label: 'Suspicious Requests',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{% include 'footer.html' %}
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from gevent.pywsgi import WSGIServer
 
 from flask_recon import Listener, add_routes
@@ -62,6 +62,13 @@ def ip_lookup():
 @app.route('/sitemap.xml')
 def sitemap():
     return open("sitemap.xml", "rb").read()
+
+
+@app.route("/cv")
+def cv():
+    response = Response(open("cv.pdf", "rb").read())
+    response.headers["Content-Type"] = "application/pdf"
+    return response
 
 
 if __name__ == '__main__':
