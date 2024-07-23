@@ -192,7 +192,8 @@ class IncomingRequest:
     def as_csv(self) -> str:
         qs_sep = "?" if self.query_string else ""
         s = self._csv_sep
-        return (f"{self.host.address}{s}{self.method}{s}{self.escape_csv(self.uri)}{qs_sep}"
+        header = "address,method,uri,query_string,headers,body,timestamp\n"
+        return header + (f"{self.host.address}{s}{self.method}{s}{self.escape_csv(self.uri)}{qs_sep}"
                 f"{self.escape_csv(self.query_string)}{s}{self.escape_csv(dumps(self.headers))}{s}"
                 f"{self.escape_csv(dumps(self.body))}{s}{self.timestamp}")
 
